@@ -35,6 +35,7 @@
       path: /etc/hosts
       regexp: '^10\.1\.2\.4'
       line: '10.1.2.4 localhost {{ ansible_hostname}}'
+    notify: Restart dnsmasq
   - name: Disable existing DNS
     ansible.builtin.service:
       name: systemd-resolved
@@ -46,8 +47,11 @@
       dest: /etc/dnsmasq.conf
       owner: root
       mode: '0644'
-  - name: Start dnsmasq
+    notify: Restart dnsmasq
+  handlers:
+  - name: Restart dnsmasq
     ansible.builtin.service:
       name: dnsmasq
       enabled: yes
       state: restarted
+

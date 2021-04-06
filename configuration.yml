@@ -31,6 +31,6 @@
       name: systemd-resolved
       state: stopped
   - name: Install dnsmasq
-  ansible.builtin.package:
-    name: dnsmasq
-    state: latest
+    ansible.builtin.package:
+      name: dnsmasq
+      state: latest

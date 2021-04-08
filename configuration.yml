@@ -35,11 +35,19 @@
       path: /etc/hosts
       regexp: '^10\.1\.2\.4'
       line: '10.1.2.4 localhost {{ ansible_hostname}}'
+    notify: Restart dnsmasq
+  - name: Set host1
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: '^10\.1\.2\.4'
+      line: '10.1.2.4 sniper5'
+    notify: Restart dnsmasq
   - name: Set host2
     ansible.builtin.lineinfile:
       path: /etc/hosts
       regexp: '^10\.1\.2\.5'
       line: '10.1.2.5 target2'
+    notify: Restart dnsmasq
   - name: Set host3
     ansible.builtin.lineinfile:
       path: /etc/hosts

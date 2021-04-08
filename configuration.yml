@@ -111,10 +111,10 @@
   - name: Check if resolv.conf exists
     stat:
       path: /etc/resolv.conf
-    register: stat_result
+    register: {{ansible_host}}_result
   - name: Set resolv.conf nameserver
     lineinfile:
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
-    when: stat_result.stat.exists
+    when: {{ansible_host}}_result.stat.exists

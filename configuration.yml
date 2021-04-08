@@ -46,6 +46,7 @@
       state: present
     when: hostvars[item].ansible_host is defined
     with_items: "{{ groups['ansible_lab_hosts']}}"
+    notify: Restart dnsmasq
   # - name: Set local hostname
   #   ansible.builtin.lineinfile:
   #     path: /etc/hosts

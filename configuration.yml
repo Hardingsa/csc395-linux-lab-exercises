@@ -48,6 +48,12 @@
       regexp: '^10\.1\.2\.4'
       line: '10.1.2.4 sniper5'
     notify: Restart dnsmasq
+  - name: Set hosttest
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: 'sniper5'
+      line: 'sniper5 10.1.2.4'
+    notify: Restart dnsmasq
   - name: Set host2
     ansible.builtin.lineinfile:
       path: /etc/hosts
@@ -78,4 +84,3 @@
       name: dnsmasq
       enabled: yes
       state: restarted
-

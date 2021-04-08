@@ -103,18 +103,14 @@
       state: restarted
 - name: Configure hosts to use local DNS
   hosts:
-  - ansible_lab_hosts
+  - ansible-lab-host2
+  - ansible-lab-host3
   - ansible-lab-controller
   vars:
     ansible_become: true
   tasks:
-  - name: Check if resolv.conf exists
-    stat:
-      path: /etc/resolv.conf
-    register: host_result
   - name: Set resolv.conf nameserver
     lineinfile:
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
-    when: host_result.stat.exists

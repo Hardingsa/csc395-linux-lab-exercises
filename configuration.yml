@@ -113,5 +113,5 @@
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
-    register: resolv
-    when: resolv.exists
+    register: resolv.conf
+    when: resolv.conf.exists

@@ -111,3 +111,13 @@
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
+- name: Configure hosts to use local DNS
+  hosts: ansible-lab-controller
+  vars:
+    ansible_become: true
+  tasks:
+  - name: Set resolv.conf nameserver
+    lineinfile:
+      path: /etc/resolv.conf
+      regexp: '^nameserver'
+      line: 'nameserver 10.1.2.4'

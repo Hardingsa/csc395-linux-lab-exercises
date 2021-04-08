@@ -35,6 +35,16 @@
       path: /etc/hosts
       regexp: '^10\.1\.2\.4'
       line: '10.1.2.4 localhost {{ ansible_hostname}}'
+  - name: Set host2
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: '^10\.1\.2\.5'
+      line: '10.1.2.5 target2'
+  - name: Set host3
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: '^10\.1\.2\.6'
+      line: '10.1.2.6 target3'
     notify: Restart dnsmasq
   - name: Disable existing DNS
     ansible.builtin.service:

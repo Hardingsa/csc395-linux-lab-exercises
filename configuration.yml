@@ -108,10 +108,14 @@
   vars:
     ansible_become: true
   tasks:
+  - name: Check if resolv.conf exists
+    stat:
+      path: /etc/resolv.conf
+    register: resolv
   - name: Set resolv.conf nameserver
     lineinfile:
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
     register: resolv.conf
-    when: resolv.conf.exists
+    when: resolv.exists

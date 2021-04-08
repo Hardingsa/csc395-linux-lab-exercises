@@ -20,6 +20,8 @@
       stig_version: rhel7
       security_enable_pwquality_password_set: yes
       security_password_max_lifetime_days: 90
+  tags:
+  - hardening
 
 - name: Config DNS Server
   hosts: ansible-lab-host1
@@ -30,42 +32,55 @@
     ansible.builtin.package:
       name: dnsmasq
       state: latest
-  - name: Set local hostname
-    ansible.builtin.lineinfile:
-      path: /etc/hosts
-      regexp: '^10\.1\.2\.4'
-      line: '10.1.2.4 localhost {{ ansible_hostname}}'
-    notify: Restart dnsmasq
-  - name: Set controller
-    ansible.builtin.lineinfile:
-      path: /etc/hosts
-      regexp: '^10\.1\.1\.4'
-      line: '10.1.1.4 overwatch'
-    notify: Restart dnsmasq
-  - name: Set host1
-    ansible.builtin.lineinfile:
-      path: /etc/hosts
-      regexp: '^10\.1\.2\.4'
-      line: '10.1.2.4 sniper5'
-    notify: Restart dnsmasq
-  - name: Set hosttest
-    ansible.builtin.lineinfile:
-      path: /etc/hosts
-      regexp: 'sniper5'
-      line: 'sniper5 10.1.2.4'
-    notify: Restart dnsmasq
-  - name: Set host2
-    ansible.builtin.lineinfile:
-      path: /etc/hosts
-      regexp: '^10\.1\.2\.5'
-      line: '10.1.2.5 target2'
-    notify: Restart dnsmasq
-  - name: Set host3
-    ansible.builtin.lineinfile:
-      path: /etc/hosts
-      regexp: '^10\.1\.2\.6'
-      line: '10.1.2.6 target3'
-    notify: Restart dnsmasq
+  - name: Add Local hostname
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '.*{{ansible_hostname}}$'
+      line: "{{ansible_host}} {{ansible_hostname}}"
+    when: ansible_host is defined
+  - name: Add all hosts to hostfile
+    lineinfile:
+      dest: /etc/hosts
+      regexp: ".*{{ hostvars[item].ansible_host }} {{item}}"
+      state: present
+    when: hostvars[item].ansible_host is defined
+    with_items: "{{ groups['ansible_lab_hosts']}}"
+  # - name: Set local hostname
+  #   ansible.builtin.lineinfile:
+  #     path: /etc/hosts
+  #     regexp: '^10\.1\.2\.4'
+  #     line: '10.1.2.4 localhost {{ ansible_hostname}}'
+  #   notify: Restart dnsmasq
+  # - name: Set controller
+  #   ansible.builtin.lineinfile:
+  #     path: /etc/hosts
+  #     regexp: '^10\.1\.1\.4'
+  #     line: '10.1.1.4 overwatch'
+  #   notify: Restart dnsmasq
+  # - name: Set host1
+  #   ansible.builtin.lineinfile:
+  #     path: /etc/hosts
+  #     regexp: '^10\.1\.2\.4'
+  #     line: '10.1.2.4 sniper5'
+  #   notify: Restart dnsmasq
+  # - name: Set hosttest
+  #   ansible.builtin.lineinfile:
+  #     path: /etc/hosts
+  #     regexp: 'sniper5'
+  #     line: 'sniper5 10.1.2.4'
+  #   notify: Restart dnsmasq
+  # - name: Set host2
+  #   ansible.builtin.lineinfile:
+  #     path: /etc/hosts
+  #     regexp: '^10\.1\.2\.5'
+  #     line: '10.1.2.5 target2'
+  #   notify: Restart dnsmasq
+  # - name: Set host3
+  #   ansible.builtin.lineinfile:
+  #     path: /etc/hosts
+  #     regexp: '^10\.1\.2\.6'
+  #     line: '10.1.2.6 target3'
+  #   notify: Restart dnsmasq
   - name: Disable existing DNS
     ansible.builtin.service:
       name: systemd-resolved
@@ -84,3 +99,13 @@
       name: dnsmasq
       enabled: yes
       state: restarted
+- name: Configure hosts to use local DNS
+  hosts: ansible_lab_hosts
+  vars:
+    ansible_become: true
+  tasks:
+  - name: Set resolv.conf nameserver
+    lineinfile:
+      path: /etc/resolv.conf
+      regexp: '^nameserver'
+      line: 'nameserver 10.1.2.4'

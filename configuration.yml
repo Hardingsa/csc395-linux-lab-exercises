@@ -102,7 +102,9 @@
       enabled: yes
       state: restarted
 - name: Configure hosts to use local DNS
-  hosts: ansible_lab_hosts
+  hosts:
+  - ansible_lab_hosts
+  - ansible-lab-controller
   vars:
     ansible_become: true
   tasks:
@@ -111,14 +113,5 @@
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
-    when: /etc/resolv.conf.exists
-- name: Configure hosts to use local DNS
-  hosts: ansible-lab-controller
-  vars:
-    ansible_become: true
-  tasks:
-  - name: Set resolv.conf nameserver
-    lineinfile:
-      path: /etc/resolv.conf
-      regexp: '^nameserver'
-      line: 'nameserver 10.1.2.4'
+    register: resolv
+    when: resolv.exists

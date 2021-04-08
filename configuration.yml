@@ -41,7 +41,8 @@
   - name: Add all hosts to hostfile
     lineinfile:
       dest: /etc/hosts
-      regexp: ".*{{ hostvars[item].ansible_host }} {{item}}"
+      regexp: '.*{{ item }}$'
+      line: ".*{{ hostvars[item].ansible_host }} {{item}}"
       state: present
     when: hostvars[item].ansible_host is defined
     with_items: "{{ groups['ansible_lab_hosts']}}"

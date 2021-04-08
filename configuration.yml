@@ -111,6 +111,7 @@
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
+    when: resolv.conf.exists
 - name: Configure hosts to use local DNS
   hosts: ansible-lab-controller
   vars:

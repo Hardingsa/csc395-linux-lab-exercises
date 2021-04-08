@@ -36,6 +36,12 @@
       regexp: '^10\.1\.2\.4'
       line: '10.1.2.4 localhost {{ ansible_hostname}}'
     notify: Restart dnsmasq
+  - name: Set controller
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: '^10\.1\.1\.4'
+      line: '10.1.1.4 overwatch'
+    notify: Restart dnsmasq
   - name: Set host1
     ansible.builtin.lineinfile:
       path: /etc/hosts

@@ -6,15 +6,15 @@ all:
   children:
     azure_lab:
       children:
-      ansible_lab_hosts:
-        hosts:
-          ansible-lab-host1:
-            ansible_host: 10.1.2.4
-          ansible-lab-host2:
-            ansible_host: 10.1.2.5
-          ansible-lab-host3:
-            ansible_host: 10.1.2.6
-      ansible_controllers:
-        hosts:
-          ansible-lab-controller:
-            ansible_host: 10.1.1.4
+        ansible_lab_hosts:
+          hosts:
+            ansible-lab-host1:
+              ansible_host: 10.1.2.4
+            ansible-lab-host2:
+              ansible_host: 10.1.2.5
+            ansible-lab-host3:
+              ansible_host: 10.1.2.6
+        ansible_controllers:
+          hosts:
+            ansible-lab-controller:
+              ansible_host: 10.1.1.4

@@ -1,0 +1,2 @@
+admin_un: '{{ vault_admin_un }}'
+admin_pw: '{{ vault_admin_pw }}'

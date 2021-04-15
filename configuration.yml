@@ -114,3 +114,39 @@
       path: /etc/resolv.conf
       regexp: '^nameserver'
       line: 'nameserver 10.1.2.4'
+- name: Configure Samba server
+  hosts: ansible-lab-host2
+  vars:
+    ansible_become: true
+  roles:
+  - bertvv.samba
+- name: Configure Samba client
+  hosts: ansible-lab-host3
+  vars:
+    ansible_become: true
+  roles:
+  - bertvv.samba
+  tasks:
+  - name: Install client depends
+    package:
+      name: cifs-utils
+      state: latest
+  - name: Create Cred file
+    template:
+      src: ./files/.smbpasswd
+      dest: /home/{{ admin_un }}/.smbpasswd
+      owner: '{{ admin_un }}'
+      group: '{{ admin_un }}'
+      mode: '0600'
+  - name: Add mounted share
+    mount:
+      src: //10.1.2.5/Sniper5Repo
+      path: /mnt/smbshare
+      fstype: cifs
+      opts: credentials=/home/{{ admin_un }}/.smbpasswd
+      state: mounted
+  - name: Set mount writable
+    file:
+      path: /mnt/smbshare
+      state: directory
+      mode: '0777'

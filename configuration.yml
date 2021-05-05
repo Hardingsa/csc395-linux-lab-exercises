@@ -180,5 +180,5 @@
     ansible_become: true
     openvpn_server_hostname: 13.64.248.64
   roles:
-    - role: ansible-role-openvpn
+    - role: kyl191.openvpn
       clients: client1
